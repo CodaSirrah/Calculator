@@ -1,6 +1,7 @@
 let buttons = document.querySelectorAll("button");
 let numbers = document.getElementsByClassName("number");
-let screen = document.getElementById("screen");
+let screenOne = document.getElementById("pTop");
+let screenTwo = document.getElementById("pBottom");
 let operators = document.getElementsByClassName("operator");
 let currentNumber = 0;
 let previousNumber = 0;
@@ -8,7 +9,8 @@ let currentOperator;
 let answer = 0;
 let anyInput = "no";
 let stringNumber = "";
-let lastAnswer;
+let firstCalculation = true;
+let firstOperator = true;
 
 const add = function(a, b) {
     return a + b;
@@ -37,13 +39,13 @@ const display = function(e) {
             numbers.style.backgroundColor = "rgba(134, 136, 143, 0.5)";
         })
         if (anyInput ==="no") {
-            document.querySelector("#screen").innerHTML = e.innerHTML;
-            stringNumber += e.innerHTML;
+            screenOne.innerHTML = e.innerHTML;
+            stringNumber = e.innerHTML;
             e.style.backgroundColor = "rgb(252, 3, 69)"
             anyInput = "yes";
         }
         else {
-        document.querySelector("#screen").innerHTML += e.innerHTML;
+        screenOne.innerHTML += e.innerHTML;
         stringNumber += e.innerHTML;
         e.style.backgroundColor = "rgb(252, 3, 69)"
         }
@@ -66,6 +68,14 @@ const chooseOperator = function(e) {
         currentOperator = e.innerHTML;
         previousNumber = parseInt(stringNumber);
         stringNumber = "";
+        if (firstOperator) {
+            screenTwo.innerHTML = `${previousNumber} ${e.innerHTML}`;
+            screenOne.innerHTML = "";
+            firstOperator = false;
+        } else {
+            screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
+            screenOne.innerHTML = "";
+        }
     })
 }
 // Calls chooseOperator function for each operator button.
@@ -73,14 +83,23 @@ for (i = 0; i < operators.length; i++) {
     chooseOperator(operators[i]);
 };
 
-// Stores current number and produces answer through operate function.
+//Stores current number and produces answer through operate function.
 const equalize = function() {
     currentNumber = parseInt(stringNumber);
-    if (currentOperator === "+") answer = operate(add, previousNumber, currentNumber);
-    if (currentOperator === "-") answer = operate(subtract, previousNumber, currentNumber);
-    if (currentOperator === "×") answer = operate(multiply, previousNumber, currentNumber);
-    if (currentOperator === "÷") answer = operate(divide, previousNumber, currentNumber);
-    return document.querySelector("#screen").innerHTML = answer;
+    if (firstCalculation) {
+        if (currentOperator === "+") answer = operate(add, previousNumber, currentNumber);
+        if (currentOperator === "-") answer = operate(subtract, previousNumber, currentNumber);
+        if (currentOperator === "×") answer = operate(multiply, previousNumber, currentNumber);
+        if (currentOperator === "÷") answer = operate(divide, previousNumber, currentNumber);
+        firstCalculation = false;
+        screenTwo.innerHTML = "";
+        return screenOne.innerHTML = answer;
+    } 
+    if (currentOperator === "+") answer = operate(add, answer, currentNumber);
+    if (currentOperator === "-") answer = operate(subtract, answer, currentNumber);
+    if (currentOperator === "×") answer = operate(multiply,answer, currentNumber);
+    if (currentOperator === "÷") answer = operate(divide, answer, currentNumber);
+    return screenOne.innerHTML = answer;
 }
 // Calls equalize function.
 document.getElementById("equals").addEventListener("click", () => {

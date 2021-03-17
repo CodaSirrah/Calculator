@@ -1,1 +1,1 @@
-A calculator built for the browser to the specifications of TOP's Foundation course.
+A calculator built for the browser to the specifications of TOP's Foundation course calculator project.

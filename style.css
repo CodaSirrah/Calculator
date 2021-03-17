@@ -5,17 +5,49 @@
     max-width: 600px;
     margin: 0 auto;
     grid-template-areas:
-     ". screen screen ."
-     "zero divide multiply AC"
-     "seven eight nine minus"
-     "four five six plus"
-     "one two three equals";    
+    ". screen screen ."
+    ". . . ."
+    "zero divide multiply AC"
+    "seven eight nine minus"
+    "four five six plus"
+    "one two three equals";    
+    font-size: 20px;
+    padding: 20px;
+    /* background-color:rgba(160, 158, 219, 0.8); */
+    border: 2px solid black; 
 }
 
 #screen {
 grid-area: screen;
-font-size: 150%;
-   
+margin: 1px;
+background-color: rgba(134, 136, 143, 0.5);
+border: 1px solid black;
+padding-left: 200px;
+overflow: hidden;
+height: 125px;
+}
+
+#sTop {
+display: flex;
+justify-content: flex-end;
+height: 50%;
+font-size: 30px;
+
+}
+
+
+#pTop {
+    margin-right: 5%;
+}
+
+#sBottom {
+font-size: 20px;
+}
+
+#pBottom {
+float: right;
+    margin-right: 5%;
+    
 }
 
 #one  {
@@ -95,4 +127,9 @@ grid-area: one;
 button {
     margin: 1px;
     background-color: rgba(134, 136, 143, 0.5);
+    border: 2px solid black;
+}
+
+.operator {
+    font-weight: 900;
 }
