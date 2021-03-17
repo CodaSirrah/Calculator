@@ -7,10 +7,13 @@ let currentNumber = 0;
 let previousNumber = 0;
 let currentOperator;
 let answer = 0;
-let anyInput = "no";
 let stringNumber = "";
+let firstInput = true;
 let firstCalculation = true;
 let firstOperator = true;
+let btnAC = document.getElementById("AC")
+let tertiary = document.getElementsByClassName("tertiary");
+let operationCounter = 0;
 
 const add = function(a, b) {
     return a + b;
@@ -35,20 +38,15 @@ const operate = function(operator, a, b) {
    while previous number is stored inside 'previousNumber'. */
 const display = function(e) {
     e.addEventListener("click", () => {
-        buttons.forEach((numbers) => {
-            numbers.style.backgroundColor = "rgba(134, 136, 143, 0.5)";
-        })
-        if (anyInput ==="no") {
+        if (firstInput) {
             screenOne.innerHTML = e.innerHTML;
             stringNumber = e.innerHTML;
-            e.style.backgroundColor = "rgb(252, 3, 69)"
-            anyInput = "yes";
+            firstInput = false;
         }
         else {
-        screenOne.innerHTML += e.innerHTML;
-        stringNumber += e.innerHTML;
-        e.style.backgroundColor = "rgb(252, 3, 69)"
-        }
+            screenOne.innerHTML += e.innerHTML;
+            stringNumber += e.innerHTML;
+            }
     });
 };
 
@@ -61,20 +59,26 @@ for (i = 0; i < numbers.length; i++) {
    Stores the current operator, previous number and resets the string number. */ 
 const chooseOperator = function(e) {
     e.addEventListener("click", () => {
-        buttons.forEach((operators) => {
-            operators.style.backgroundColor = "rgba(134, 136, 143, 0.5)";
-        })
-        e.style.backgroundColor = "rgb(170, 138, 184)";
-        currentOperator = e.innerHTML;
-        previousNumber = parseInt(stringNumber);
-        stringNumber = "";
-        if (firstOperator) {
+        if (operationCounter >= 2) {
+            currentOperator = e.innerHTML;
+            operationCounter +=1;
+            equalize();
+        }
+        else if (firstOperator) {   
+            currentOperator = e.innerHTML;
+            previousNumber = parseInt(stringNumber);
+            stringNumber = "";
             screenTwo.innerHTML = `${previousNumber} ${e.innerHTML}`;
             screenOne.innerHTML = "";
             firstOperator = false;
+            operationCounter +=1;
         } else {
+            currentOperator = e.innerHTML;
+            previousNumber = parseInt(stringNumber);
+            stringNumber = "";
             screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
             screenOne.innerHTML = "";
+            operationCounter +=1;
         }
     })
 }
@@ -92,16 +96,35 @@ const equalize = function() {
         if (currentOperator === "×") answer = operate(multiply, previousNumber, currentNumber);
         if (currentOperator === "÷") answer = operate(divide, previousNumber, currentNumber);
         firstCalculation = false;
-        screenTwo.innerHTML = "";
+        operationCounter -=1;
+        stringNumber = "";
         return screenOne.innerHTML = answer;
-    } 
+    } else { 
     if (currentOperator === "+") answer = operate(add, answer, currentNumber);
     if (currentOperator === "-") answer = operate(subtract, answer, currentNumber);
     if (currentOperator === "×") answer = operate(multiply,answer, currentNumber);
     if (currentOperator === "÷") answer = operate(divide, answer, currentNumber);
+    operationCounter -=1;
+    stringNumber = "";
     return screenOne.innerHTML = answer;
+    }
 }
 // Calls equalize function.
 document.getElementById("equals").addEventListener("click", () => {
     equalize();
+});
+
+const allClear = function() {
+    firstInput = true;
+    firstCalculation = true;
+    firstOperator = true;
+    previousNumber = 0;
+    currentNumber = 0;
+    answer = 0;
+    screenOne.innerHTML = currentNumber;
+    screenTwo. innerHTML = "";
+}
+
+btnAC.addEventListener("click", () => {
+    allClear();
 });
