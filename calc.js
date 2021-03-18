@@ -15,6 +15,7 @@ let btnAC = document.getElementById("AC")
 let tertiary = document.getElementsByClassName("tertiary");
 let equalsEligible = false;
 let secondOperation = false;
+let newNumber = false;
 
 const add = function(a, b) {
     return a + b;
@@ -43,11 +44,13 @@ const display = function(e) {
             screenOne.innerHTML = e.innerHTML;
             stringNumber = e.innerHTML;
             firstInput = false;
+            newNumber = true;
         }
         else {
             screenOne.innerHTML += e.innerHTML;
             stringNumber += e.innerHTML;
             equalsEligible = true;
+            newNumber = true;
             }
     });
 };
@@ -64,14 +67,14 @@ const chooseOperator = function(e) {
         if (firstInput) {
             return;
         }
-        if (currentOperator === e.innerHTML && secondOperation === true) return;
-        if (currentOperator === e.innerHTML) return;
+        if (currentOperator === e.innerHTML && newNumber === false) return;
         else if (secondOperation) {
             equalize();
             currentOperator = e.innerHTML;
             screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
             screenOne.innerHTML = "";
             secondOperation = true;
+            newNumber = false;
 
         } else {
          if (firstOperator) {   
@@ -82,6 +85,7 @@ const chooseOperator = function(e) {
             screenOne.innerHTML = "";
             firstOperator = false;
             secondOperation = true;
+            newNumber = false;
             } else {
             currentOperator = e.innerHTML;
             previousNumber = parseInt(stringNumber);
@@ -89,6 +93,7 @@ const chooseOperator = function(e) {
             screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
             screenOne.innerHTML = "";
             secondOperation = true;
+            newNumber = false;
             }
         }
     })
@@ -106,22 +111,33 @@ const equalize = function() {
         if (currentOperator === "+") answer = operate(add, previousNumber, currentNumber);
         if (currentOperator === "-") answer = operate(subtract, previousNumber, currentNumber);
         if (currentOperator === "×") answer = operate(multiply, previousNumber, currentNumber);
-        if (currentOperator === "÷") answer = operate(divide, previousNumber, currentNumber);
+        if (currentOperator === "÷" && currentNumber === 0)  {
+        allClear();
+        return screenOne.innerHTML = "Sure Buddy.";
+        }
+        if (currentOperator === "÷" && currentNumber !== 0) answer = operate(divide, previousNumber, currentNumber);
         firstCalculation = false;
         stringNumber = "";
         screenTwo.innerHTML = "";
         equalsEligible = false;
         secondOperation = false;
+        answer = checkDecimal(answer);
         return screenOne.innerHTML = answer;
     } else { 
     if (currentOperator === "+") answer = operate(add, answer, currentNumber);
     if (currentOperator === "-") answer = operate(subtract, answer, currentNumber);
     if (currentOperator === "×") answer = operate(multiply,answer, currentNumber);
-    if (currentOperator === "÷") answer = operate(divide, answer, currentNumber);
+    if (currentOperator === "÷" && currentNumber === 0)  {
+        allClear();
+        return screenOne.innerHTML = "Sure Buddy.";
+    }
+    if (currentOperator === "÷" && currentNumber !== 0) answer = operate(divide, answer, currentNumber);
     stringNumber = "";
     screenTwo.innerHTML = "";
     equalsEligible = false;
     secondOperation = false;
+    if (answer)
+    answer = checkDecimal(answer);
     return screenOne.innerHTML = answer;
     }
 }
@@ -130,6 +146,7 @@ document.getElementById("equals").addEventListener("click", () => {
     equalize();
 });
 
+// Clears Calculator of all data.
 const allClear = function() {
     firstInput = true;
     firstCalculation = true;
@@ -141,8 +158,23 @@ const allClear = function() {
     screenTwo. innerHTML = "";
     equalsEligible = false;
     secondOperation = false;
+    newNumber = false;
 }
 
 btnAC.addEventListener("click", () => {
     allClear();
 });
+
+// Rounds answer to 10 decimal points if it has more than 10.
+const checkDecimal = function(e) {
+    let decimalCheck = e.toString();
+    if (decimalCheck.includes(".")) {
+        decimalCheck = decimalCheck.split(".");
+        let decimalCheckDec = decimalCheck[1].split("");
+        if (decimalCheckDec.length > 10) {
+            e = Math.round(answer * 10000000000) / 10000000000;
+            
+        };
+    }
+    return e;
+};
