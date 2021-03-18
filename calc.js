@@ -5,6 +5,10 @@ let screenTwo = document.getElementById("pBottom");
 let operators = document.getElementsByClassName("operator");
 let btnDec = document.getElementById("decimal");
 let btnBackspace = document.getElementById("backspace");
+let btnNP = document.getElementById("negativePositive");
+let btnDayNight = document.getElementById("dayNight");
+let screenColor = document.getElementById("screen");
+const body = document.querySelector("body");
 let currentNumber = 0;
 let previousNumber = 0;
 let currentOperator;
@@ -60,8 +64,6 @@ const display = function(e) {
                 answer = answer.toString();
                 answer += stringNumber;
                 stringNumber = "";
-                console.log(answer);
-                console.log(stringNumber);
                 currentNumber = 0;
                 equalsEligible = false;
                 (answer.includes(".")) ? answer = parseFloat(answer) : answer = parseInt(answer)
@@ -190,7 +192,6 @@ const checkDecimal = function(e) {
         let decimalCheckDec = decimalCheck[1].split("");
         if (decimalCheckDec.length > 10) {
             e = Math.round(answer * 10000000000) / 10000000000;
-            
         };
     }
     return e;
@@ -207,15 +208,7 @@ btnDec.addEventListener("click", () => {
     return makeDecimal();
 })
 
-const backspace = function(e) {
-    // console.log(e);
-    // let checkDigit = e.toString();
-    // console.log(checkDigit);
-    // checkDigit = checkDigit.split("");
-    // console.log(checkDigit);
-    // checkDigit.pop();
-    // (checkDigit.includes(".")) ? parseFloat(checkDigit) : parseInt(checkDigit);
-    // e = checkDigit; 
+const backspace = function() {
     let x = screenOne.innerHTML;
     x = x.split("");
     x.pop();
@@ -226,6 +219,59 @@ const backspace = function(e) {
 };
 
 btnBackspace.addEventListener("click", () => {
-    
-    backspace(answer);
+    backspace();
 })
+
+const changeSign = function() {
+
+};
+
+btnNP.addEventListener("click", () => {
+    let x = screenOne.innerHTML;
+    if (x.includes("-")) {
+        x = x.split("");
+        x.shift();
+        x = x.toString();
+        x = x.replace(/,/g, "");
+        stringNumber = x;
+        screenOne.innerHTML = x;
+    }
+    else {
+    x = x.split("");
+    x.unshift("-");
+    x = x.toString();
+    x = x.replace(/,/g, "");
+    stringNumber = x;
+    screenOne.innerHTML = x;
+    }
+});
+
+
+let restEyes = function() {
+   if (body.style.backgroundColor === "white") {
+    body.style.backgroundColor = "black";
+    btnDayNight.innerHTML = "☀️";
+    btnDayNight.style.backgroundColor = "grey";
+    screenColor.style.backgroundColor = "grey";
+    btnDayNight.style.borderColor = "rgb(252, 3, 69)";
+
+
+   } else if (body.style.backgroundColor === "black"){
+    body.style.backgroundColor = "white";
+    btnDayNight.innerHTML = "🌑";
+    btnDayNight.style.backgroundColor = "white";
+    screenColor.style.backgroundColor = "white";
+    btnDayNight.style.borderColor = "rgb(170, 138, 184)";
+    btnDayNight.style.backgroundColor = "black";
+   } else {
+    body.style.backgroundColor = "black";
+    btnDayNight.innerHTML = "☀️";
+    btnDayNight.style.backgroundColor = "grey";
+    screenColor.style.backgroundColor = "grey";
+    btnDayNight.style.borderColor = "rgb(252, 3, 69)";
+   }
+};
+
+btnDayNight.addEventListener("click", () => {
+    restEyes();
+});
