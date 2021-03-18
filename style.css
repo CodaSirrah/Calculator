@@ -177,12 +177,11 @@ button {
 }
 
 #dNContainer {
-    position: fixed;
-    left: 49vw;
-    bottom: 0%;
-
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+}
 #dayNight {
-    font-size: 40px;
     border: 1px solid rgb(252, 3, 69);
     background-color: grey;
     margin: auto, 0;
@@ -190,3 +189,11 @@ button {
     
 
 }
+
+
+@media screen and (max-height: 680px) {
+    #dNContainer {
+      margin-top: 5vh;
+    }
+  }
+  
