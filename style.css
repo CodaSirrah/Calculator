@@ -6,6 +6,9 @@ body {
     outline: 0;
 }
 
+* {
+    user-select: none;
+}
 #calc-body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -185,11 +188,7 @@ button {
     border: 1px solid rgb(252, 3, 69);
     background-color: grey;
     margin: auto, 0;
-    
-    
-
 }
-
 
 @media screen and (max-height: 680px) {
     #dNContainer {
