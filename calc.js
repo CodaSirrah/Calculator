@@ -13,7 +13,8 @@ let firstCalculation = true;
 let firstOperator = true;
 let btnAC = document.getElementById("AC")
 let tertiary = document.getElementsByClassName("tertiary");
-let operationCounter = 0;
+let equalsEligible = false;
+let secondOperation = false;
 
 const add = function(a, b) {
     return a + b;
@@ -46,6 +47,7 @@ const display = function(e) {
         else {
             screenOne.innerHTML += e.innerHTML;
             stringNumber += e.innerHTML;
+            equalsEligible = true;
             }
     });
 };
@@ -59,26 +61,35 @@ for (i = 0; i < numbers.length; i++) {
    Stores the current operator, previous number and resets the string number. */ 
 const chooseOperator = function(e) {
     e.addEventListener("click", () => {
-        if (operationCounter >= 2) {
-            currentOperator = e.innerHTML;
-            operationCounter +=1;
-            equalize();
+        if (firstInput) {
+            return;
         }
-        else if (firstOperator) {   
+        if (currentOperator === e.innerHTML && secondOperation === true) return;
+        if (currentOperator === e.innerHTML) return;
+        else if (secondOperation) {
+            equalize();
+            currentOperator = e.innerHTML;
+            screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
+            screenOne.innerHTML = "";
+            secondOperation = true;
+
+        } else {
+         if (firstOperator) {   
             currentOperator = e.innerHTML;
             previousNumber = parseInt(stringNumber);
             stringNumber = "";
             screenTwo.innerHTML = `${previousNumber} ${e.innerHTML}`;
             screenOne.innerHTML = "";
             firstOperator = false;
-            operationCounter +=1;
-        } else {
+            secondOperation = true;
+            } else {
             currentOperator = e.innerHTML;
             previousNumber = parseInt(stringNumber);
             stringNumber = "";
             screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
             screenOne.innerHTML = "";
-            operationCounter +=1;
+            secondOperation = true;
+            }
         }
     })
 }
@@ -90,22 +101,27 @@ for (i = 0; i < operators.length; i++) {
 //Stores current number and produces answer through operate function.
 const equalize = function() {
     currentNumber = parseInt(stringNumber);
+    if (equalsEligible === false) return;
     if (firstCalculation) {
         if (currentOperator === "+") answer = operate(add, previousNumber, currentNumber);
         if (currentOperator === "-") answer = operate(subtract, previousNumber, currentNumber);
         if (currentOperator === "×") answer = operate(multiply, previousNumber, currentNumber);
         if (currentOperator === "÷") answer = operate(divide, previousNumber, currentNumber);
         firstCalculation = false;
-        operationCounter -=1;
         stringNumber = "";
+        screenTwo.innerHTML = "";
+        equalsEligible = false;
+        secondOperation = false;
         return screenOne.innerHTML = answer;
     } else { 
     if (currentOperator === "+") answer = operate(add, answer, currentNumber);
     if (currentOperator === "-") answer = operate(subtract, answer, currentNumber);
     if (currentOperator === "×") answer = operate(multiply,answer, currentNumber);
     if (currentOperator === "÷") answer = operate(divide, answer, currentNumber);
-    operationCounter -=1;
     stringNumber = "";
+    screenTwo.innerHTML = "";
+    equalsEligible = false;
+    secondOperation = false;
     return screenOne.innerHTML = answer;
     }
 }
@@ -123,6 +139,8 @@ const allClear = function() {
     answer = 0;
     screenOne.innerHTML = currentNumber;
     screenTwo. innerHTML = "";
+    equalsEligible = false;
+    secondOperation = false;
 }
 
 btnAC.addEventListener("click", () => {
