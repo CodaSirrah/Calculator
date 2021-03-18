@@ -5,7 +5,7 @@
     max-width: 600px;
     margin: 0 auto;
     grid-template-areas:
-    ". screen screen ."
+    "screen screen screen screen"
     ". . . ."
     "zero divide multiply AC"
     "seven eight nine minus"
