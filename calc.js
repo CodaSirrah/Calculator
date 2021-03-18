@@ -250,25 +250,24 @@ btnNP.addEventListener("click", () => {
 let restEyes = function() {
    if (body.style.backgroundColor === "white") {
     body.style.backgroundColor = "black";
-    btnDayNight.innerHTML = "☀️";
-    btnDayNight.style.backgroundColor = "grey";
+    btnDayNight.innerHTML = "🌑";
     screenColor.style.backgroundColor = "grey";
-    btnDayNight.style.borderColor = "rgb(252, 3, 69)";
+    btnDayNight.style.borderColor = "rgb(170, 138, 184)";
+    btnDayNight.style.backgroundColor = "black";
 
 
    } else if (body.style.backgroundColor === "black"){
     body.style.backgroundColor = "white";
-    btnDayNight.innerHTML = "🌑";
-    btnDayNight.style.backgroundColor = "white";
+    btnDayNight.innerHTML = "☀️";
     screenColor.style.backgroundColor = "white";
-    btnDayNight.style.borderColor = "rgb(170, 138, 184)";
-    btnDayNight.style.backgroundColor = "black";
+    btnDayNight.style.borderColor = "rgb(252, 3, 69)";
+    btnDayNight.style.backgroundColor = "grey";
    } else {
     body.style.backgroundColor = "black";
-    btnDayNight.innerHTML = "☀️";
-    btnDayNight.style.backgroundColor = "grey";
+    btnDayNight.innerHTML = "🌑";
     screenColor.style.backgroundColor = "grey";
-    btnDayNight.style.borderColor = "rgb(252, 3, 69)";
+    btnDayNight.style.borderColor = "rgb(170, 138, 184)";
+    btnDayNight.style.backgroundColor = "black";
    }
 };
 
