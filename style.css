@@ -6,12 +6,6 @@ body {
     outline: 0;
 }
 
-@media screen and (max-height: 660px) {
-    #calc-body {
-        height: 50%;
-    }
-  }
-
 #calc-body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
