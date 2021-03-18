@@ -6,7 +6,7 @@
     margin: 0 auto;
     grid-template-areas:
     "screen screen screen screen"
-    ". . . ."
+    ". . dec backspace"
     "zero divide multiply AC"
     "seven eight nine minus"
     "four five six plus"
@@ -105,7 +105,7 @@ button:hover {
       
 }
 
-#zero{
+#zero {
     grid-area: zero;
       
 }
@@ -132,6 +132,14 @@ button:hover {
 
 #AC {
     grid-area: AC;
+}
+
+#backspace {
+    grid-area: backspace;
+}
+
+#decimal {
+    grid-area: dec;
 }
 
 button {

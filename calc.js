@@ -3,6 +3,8 @@ let numbers = document.getElementsByClassName("number");
 let screenOne = document.getElementById("pTop");
 let screenTwo = document.getElementById("pBottom");
 let operators = document.getElementsByClassName("operator");
+let btnDec = document.getElementById("decimal");
+let btnBackspace = document.getElementById("backspace");
 let currentNumber = 0;
 let previousNumber = 0;
 let currentOperator;
@@ -16,6 +18,8 @@ let tertiary = document.getElementsByClassName("tertiary");
 let equalsEligible = false;
 let secondOperation = false;
 let newNumber = false;
+let currentNumType = "none";
+
 
 const add = function(a, b) {
     return a + b;
@@ -40,6 +44,7 @@ const operate = function(operator, a, b) {
    while previous number is stored inside 'previousNumber'. */
 const display = function(e) {
     e.addEventListener("click", () => {
+        
         if (firstInput) {
             screenOne.innerHTML = e.innerHTML;
             stringNumber = e.innerHTML;
@@ -51,10 +56,19 @@ const display = function(e) {
             stringNumber += e.innerHTML;
             equalsEligible = true;
             newNumber = true;
+            if (firstCalculation === false && answer.toString() + stringNumber === screenOne.innerHTML) {
+                answer = answer.toString();
+                answer += stringNumber;
+                stringNumber = "";
+                console.log(answer);
+                console.log(stringNumber);
+                currentNumber = 0;
+                equalsEligible = false;
+                (answer.includes(".")) ? answer = parseFloat(answer) : answer = parseInt(answer)
             }
-    });
-};
-
+    };
+});
+}
 // Calls display function for each number button.
 for (i = 0; i < numbers.length; i++) {
     display(numbers[i]);
@@ -68,6 +82,7 @@ const chooseOperator = function(e) {
             return;
         }
         if (currentOperator === e.innerHTML && newNumber === false) return;
+        if (currentOperator !== e.innerHTML && newNumber == false) return;
         else if (secondOperation) {
             equalize();
             currentOperator = e.innerHTML;
@@ -79,16 +94,16 @@ const chooseOperator = function(e) {
         } else {
          if (firstOperator) {   
             currentOperator = e.innerHTML;
-            previousNumber = parseInt(stringNumber);
+            (stringNumber.includes(".")) ? previousNumber = parseFloat(stringNumber) : previousNumber = parseInt(stringNumber);
             stringNumber = "";
             screenTwo.innerHTML = `${previousNumber} ${e.innerHTML}`;
             screenOne.innerHTML = "";
             firstOperator = false;
             secondOperation = true;
             newNumber = false;
+            currentNumType = "current";
             } else {
             currentOperator = e.innerHTML;
-            previousNumber = parseInt(stringNumber);
             stringNumber = "";
             screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
             screenOne.innerHTML = "";
@@ -105,8 +120,9 @@ for (i = 0; i < operators.length; i++) {
 
 //Stores current number and produces answer through operate function.
 const equalize = function() {
-    currentNumber = parseInt(stringNumber);
-    if (equalsEligible === false) return;
+    if (firstOperator) return currentNumber = stringNumber; 
+    if (equalsEligible === false || newNumber === false) return;
+    (stringNumber.includes(".")) ? currentNumber = parseFloat(stringNumber) : currentNumber = parseInt(stringNumber);
     if (firstCalculation) {
         if (currentOperator === "+") answer = operate(add, previousNumber, currentNumber);
         if (currentOperator === "-") answer = operate(subtract, previousNumber, currentNumber);
@@ -144,6 +160,7 @@ const equalize = function() {
 // Calls equalize function.
 document.getElementById("equals").addEventListener("click", () => {
     equalize();
+    
 });
 
 // Clears Calculator of all data.
@@ -178,3 +195,37 @@ const checkDecimal = function(e) {
     }
     return e;
 };
+
+const makeDecimal = function() {
+    if (screenOne.innerHTML.includes(".")) return;
+    screenOne.innerHTML += btnDec.innerHTML;
+    stringNumber += btnDec.innerHTML;
+    firstInput = false;
+};
+
+btnDec.addEventListener("click", () => {
+    return makeDecimal();
+})
+
+const backspace = function(e) {
+    // console.log(e);
+    // let checkDigit = e.toString();
+    // console.log(checkDigit);
+    // checkDigit = checkDigit.split("");
+    // console.log(checkDigit);
+    // checkDigit.pop();
+    // (checkDigit.includes(".")) ? parseFloat(checkDigit) : parseInt(checkDigit);
+    // e = checkDigit; 
+    let x = screenOne.innerHTML;
+    x = x.split("");
+    x.pop();
+    x = x.toString();
+    x = x.replace(/,/g, "");
+    stringNumber = x;
+    screenOne.innerHTML = x;
+};
+
+btnBackspace.addEventListener("click", () => {
+    
+    backspace(answer);
+})
