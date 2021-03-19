@@ -9,6 +9,7 @@ let btnNP = document.getElementById("negativePositive");
 let btnDayNight = document.getElementById("dayNight");
 let screenColor = document.getElementById("screen");
 const body = document.querySelector("body");
+const dMode = document.getElementById("d-mode");
 let currentNumber = 0;
 let previousNumber = 0;
 let currentOperator = "none";
@@ -240,24 +241,23 @@ btnNP.addEventListener("click", () => {
 let restEyes = function() {
    if (body.style.backgroundColor === "white") {
     body.style.backgroundColor = "black";
-    btnDayNight.innerHTML = "🌑";
-    screenColor.style.backgroundColor = "grey";
-    btnDayNight.style.borderColor = "rgb(170, 138, 184)";
+    screenColor.style.backgroundColor = "rgb(173, 173, 173)";
     btnDayNight.style.backgroundColor = "black";
-
+    dMode.style.color = "rgb(173, 173, 173)";
+    btnDayNight.style.borderColor  = "rgb(173, 173, 173)";
 
    } else if (body.style.backgroundColor === "black"){
-    body.style.backgroundColor = "white";
-    btnDayNight.innerHTML = "☀️";
+    body.style.backgroundColor = "rgb(247, 171, 194)";
     screenColor.style.backgroundColor = "white";
-    btnDayNight.style.borderColor = "rgb(252, 3, 69)";
-    btnDayNight.style.backgroundColor = "grey";
+    btnDayNight.style.backgroundColor = "white";
+    dMode.style.color = "white";
+    btnDayNight.style.borderColor  = "black";
    } else {
     body.style.backgroundColor = "black";
-    btnDayNight.innerHTML = "🌑";
-    screenColor.style.backgroundColor = "grey";
-    btnDayNight.style.borderColor = "rgb(170, 138, 184)";
+    screenColor.style.backgroundColor = "rgb(173, 173, 173)";
     btnDayNight.style.backgroundColor = "black";
+    dMode.style.color = "rgb(173, 173, 173)";
+    btnDayNight.style.borderColor  = "rgb(173, 173, 173)";
    }
 };
 
