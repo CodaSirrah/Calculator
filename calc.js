@@ -84,6 +84,7 @@ const chooseOperator = function(e) {
             if (newNumber === true) {
                 (stringNumber.includes(".")) ? previousNumber = parseFloat(stringNumber) : previousNumber = parseInt(stringNumber);
             }
+            previousNumber = checkDecimal(previousNumber);
             currentOperator = e.innerHTML;
             stringNumber = "";
             screenTwo.innerHTML = `${previousNumber} ${e.innerHTML}`;
