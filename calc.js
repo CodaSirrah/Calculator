@@ -11,18 +11,14 @@ let screenColor = document.getElementById("screen");
 const body = document.querySelector("body");
 let currentNumber = 0;
 let previousNumber = 0;
-let currentOperator;
-let answer = 0;
+let currentOperator = "none";
 let stringNumber = "";
 let firstInput = true;
-let firstCalculation = true;
-let firstOperator = true;
 let btnAC = document.getElementById("AC")
 let tertiary = document.getElementsByClassName("tertiary");
-let equalsEligible = false;
-let secondOperation = false;
+let successiveOperation = false;
 let newNumber = false;
-let currentNumType = "none";
+let newNum = false;
 
 
 const add = function(a, b) {
@@ -44,123 +40,103 @@ const divide = function(a, b) {
 const operate = function(operator, a, b) {
     return operator(a, b);
 };
+
 /* Displays on screen the number that is clicked and stores it inside variable 'currentNumber'
    while previous number is stored inside 'previousNumber'. */
 const display = function(e) {
     e.addEventListener("click", () => {
-        
+        newNumber = true;
         if (firstInput) {
             screenOne.innerHTML = e.innerHTML;
             stringNumber = e.innerHTML;
             firstInput = false;
-            newNumber = true;
-        }
-        else {
+        } else {
+            if (newNum) {
+                stringNumber = e.innerHTML;
+                newNum = false;
+                return screenOne.innerHTML += e.innerHTML;
+            }
             screenOne.innerHTML += e.innerHTML;
             stringNumber += e.innerHTML;
-            equalsEligible = true;
-            newNumber = true;
-            if (firstCalculation === false && answer.toString() + stringNumber === screenOne.innerHTML) {
-                answer = answer.toString();
-                answer += stringNumber;
-                stringNumber = "";
-                currentNumber = 0;
-                equalsEligible = false;
-                (answer.includes(".")) ? answer = parseFloat(answer) : answer = parseInt(answer)
-            }
-    };
-});
-}
+        }
+    })
+};
+
 // Calls display function for each number button.
 for (i = 0; i < numbers.length; i++) {
     display(numbers[i]);
 };
 
-/* Gives color to operator that is clicked for visual clarity. 
-   Stores the current operator, previous number and resets the string number. */ 
+//Stores the current operator, previous number and resets the string number. // 
 const chooseOperator = function(e) {
     e.addEventListener("click", () => {
-        if (firstInput) {
-            return;
-        }
-        if (currentOperator === e.innerHTML && newNumber === false) return;
-        if (currentOperator !== e.innerHTML && newNumber == false) return;
-        else if (secondOperation) {
+        // Stops successive clicks of operators producing error.
+        if (newNumber === false) return;
+        // Calls equalize function to chain operations before changing to new operator.
+        if (successiveOperation) {
             equalize();
             currentOperator = e.innerHTML;
-            screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
+            screenTwo.innerHTML = `${previousNumber} ${e.innerHTML}`;
             screenOne.innerHTML = "";
-            secondOperation = true;
-            newNumber = false;
-
+        // Converts screenNumber to previousNumber and changes to new operator.
         } else {
-         if (firstOperator) {   
+            if (newNumber === true) {
+                (stringNumber.includes(".")) ? previousNumber = parseFloat(stringNumber) : previousNumber = parseInt(stringNumber);
+            }
             currentOperator = e.innerHTML;
-            (stringNumber.includes(".")) ? previousNumber = parseFloat(stringNumber) : previousNumber = parseInt(stringNumber);
             stringNumber = "";
             screenTwo.innerHTML = `${previousNumber} ${e.innerHTML}`;
             screenOne.innerHTML = "";
-            firstOperator = false;
-            secondOperation = true;
-            newNumber = false;
-            currentNumType = "current";
-            } else {
-            currentOperator = e.innerHTML;
-            stringNumber = "";
-            screenTwo.innerHTML = `${answer} ${e.innerHTML}`;
-            screenOne.innerHTML = "";
-            secondOperation = true;
-            newNumber = false;
-            }
+            successiveOperation = true;
         }
+        newNumber = false;
     })
-}
+};
 // Calls chooseOperator function for each operator button.
 for (i = 0; i < operators.length; i++) {
     chooseOperator(operators[i]);
 };
 
-//Stores current number and produces answer through operate function.
+//Stores current number and produces previousNumber through operate function.
 const equalize = function() {
-    if (firstOperator) return currentNumber = stringNumber; 
-    if (equalsEligible === false || newNumber === false) return;
-    (stringNumber.includes(".")) ? currentNumber = parseFloat(stringNumber) : currentNumber = parseInt(stringNumber);
-    if (firstCalculation) {
-        if (currentOperator === "+") answer = operate(add, previousNumber, currentNumber);
-        if (currentOperator === "-") answer = operate(subtract, previousNumber, currentNumber);
-        if (currentOperator === "×") answer = operate(multiply, previousNumber, currentNumber);
+    if (currentOperator === "none" || newNumber === false) return;
+    if (successiveOperation) {
+        (stringNumber.includes(".")) ? currentNumber = parseFloat(stringNumber) : currentNumber = parseInt(stringNumber);
+        if (currentOperator === "+") previousNumber = operate(add, previousNumber, currentNumber);
+        if (currentOperator === "-") previousNumber = operate(subtract, previousNumber, currentNumber);
+        if (currentOperator === "×") previousNumber = operate(multiply, previousNumber, currentNumber);
+        if (currentOperator === "÷" && currentNumber !== 0) previousNumber = operate(divide, previousNumber, currentNumber);
         if (currentOperator === "÷" && currentNumber === 0)  {
-        allClear();
-        return screenOne.innerHTML = "Sure Buddy.";
+            allClear();
+            return screenOne.innerHTML = "Sure Buddy.";
         }
-        if (currentOperator === "÷" && currentNumber !== 0) answer = operate(divide, previousNumber, currentNumber);
-        firstCalculation = false;
-        stringNumber = "";
+        
         screenTwo.innerHTML = "";
-        equalsEligible = false;
-        secondOperation = false;
-        answer = checkDecimal(answer);
-        return screenOne.innerHTML = answer;
-    } else { 
-    if (currentOperator === "+") answer = operate(add, answer, currentNumber);
-    if (currentOperator === "-") answer = operate(subtract, answer, currentNumber);
-    if (currentOperator === "×") answer = operate(multiply,answer, currentNumber);
-    if (currentOperator === "÷" && currentNumber === 0)  {
-        allClear();
-        return screenOne.innerHTML = "Sure Buddy.";
+        previousNumber = checkDecimal(previousNumber);
+        newNum = true;
+        return screenOne.innerHTML = previousNumber;
+        }
+    else  {
+        (stringNumber.includes(".")) ? currentNumber = parseFloat(stringNumber) : currentNumber = parseInt(stringNumber);
+        if (currentOperator === "+") previousNumber = operate(add, previousNumber, currentNumber);
+        if (currentOperator === "-") previousNumber = operate(subtract, previousNumber, currentNumber);
+        if (currentOperator === "×") previousNumber = operate(multiply, previousNumber, currentNumber);
+        if (currentOperator === "÷" && currentNumber !== 0) previousNumber = operate(divide, previousNumber, currentNumber);
+        if (currentOperator === "÷" && currentNumber === 0)  {
+            allClear();
+            return screenOne.innerHTML = "Sure Buddy.";
+        }
+        currentOperator = "none";
+        stringNumber = previousNumber.toString();
+        screenTwo.innerHTML = "";
+        successiveOperation = false;
+        previousNumber = checkDecimal(previousNumber);
+        return screenOne.innerHTML = previousNumber;
     }
-    if (currentOperator === "÷" && currentNumber !== 0) answer = operate(divide, answer, currentNumber);
-    stringNumber = "";
-    screenTwo.innerHTML = "";
-    equalsEligible = false;
-    secondOperation = false;
-    if (answer)
-    answer = checkDecimal(answer);
-    return screenOne.innerHTML = answer;
-    }
-}
+};
 // Calls equalize function.
 document.getElementById("equals").addEventListener("click", () => {
+    successiveOperation = false;
     equalize();
     
 });
@@ -168,46 +144,51 @@ document.getElementById("equals").addEventListener("click", () => {
 // Clears Calculator of all data.
 const allClear = function() {
     firstInput = true;
-    firstCalculation = true;
-    firstOperator = true;
     previousNumber = 0;
     currentNumber = 0;
-    answer = 0;
+    previousNumber = 0;
     screenOne.innerHTML = currentNumber;
     screenTwo. innerHTML = "";
-    equalsEligible = false;
-    secondOperation = false;
+    successiveOperation = false;
     newNumber = false;
-}
+    newNum = false;
+};
 
 btnAC.addEventListener("click", () => {
     allClear();
 });
 
-// Rounds answer to 10 decimal points if it has more than 10.
+// Rounds previousNumber to 10 decimal points if it has more than 10.
 const checkDecimal = function(e) {
     let decimalCheck = e.toString();
     if (decimalCheck.includes(".")) {
         decimalCheck = decimalCheck.split(".");
         let decimalCheckDec = decimalCheck[1].split("");
         if (decimalCheckDec.length > 10) {
-            e = Math.round(answer * 10000000000) / 10000000000;
+            e = Math.round(e * 10000000000) / 10000000000;
         };
     }
     return e;
 };
-
+// Creates or removes decimal point.
 const makeDecimal = function() {
     if (screenOne.innerHTML.includes(".")) return;
-    screenOne.innerHTML += btnDec.innerHTML;
-    stringNumber += btnDec.innerHTML;
-    firstInput = false;
+    if (newNum) {
+        screenOne.innerHTML += btnDec.innerHTML;
+        stringNumber    = btnDec.innerHTML;
+        newNum = false;
+    } else {
+        screenOne.innerHTML += btnDec.innerHTML;
+        stringNumber += btnDec.innerHTML;
+        firstInput = false;
+    }
 };
 
 btnDec.addEventListener("click", () => {
     return makeDecimal();
-})
+});
 
+// Removes last character from calculator and updates string.
 const backspace = function() {
     let x = screenOne.innerHTML;
     x = x.split("");
@@ -220,19 +201,23 @@ const backspace = function() {
 
 btnBackspace.addEventListener("click", () => {
     backspace();
-})
+});
 
+// Changes to positive or negative number on main screen.
 const changeSign = function() {
-
-};
-
-btnNP.addEventListener("click", () => {
+    if (firstInput) {
+        firstInput = false;
+        screenOne.innerHTML = "";
+    }
     let x = screenOne.innerHTML;
+    
+    
     if (x.includes("-")) {
         x = x.split("");
         x.shift();
         x = x.toString();
         x = x.replace(/,/g, "");
+        if (newNum) newNum = false;
         stringNumber = x;
         screenOne.innerHTML = x;
     }
@@ -241,12 +226,17 @@ btnNP.addEventListener("click", () => {
     x.unshift("-");
     x = x.toString();
     x = x.replace(/,/g, "");
+    if (newNum) newNum = false;
     stringNumber = x;
     screenOne.innerHTML = x;
     }
+};
+
+btnNP.addEventListener("click", () => {
+   changeSign();
 });
 
-
+// Switches CSS between day/night aesthetic.
 let restEyes = function() {
    if (body.style.backgroundColor === "white") {
     body.style.backgroundColor = "black";
